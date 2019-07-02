@@ -9,14 +9,14 @@ import (
 func TestStripMargin(t *testing.T) {
 	testCases := []struct {
 		input  string
-		margin rune
+		margin string
 		want   string
 	}{
 		{
 			input: `This
 						 |Is
 						 |A
-						 |Test`, margin: '|', want: "This\nIs\nA\nTest",
+						 |Test`, margin: "|", want: "This\nIs\nA\nTest",
 		},
 		{
 			input: `
@@ -25,18 +25,30 @@ func TestStripMargin(t *testing.T) {
 			| A
 			| Test
 			`,
-			margin: '|', want: " This\n Is\n A\n Test",
+			margin: "| ", want: "This\nIs\nA\nTest",
 		},
 		{
 			input: `This
 						 #Is
 						 #A
-						 #Test`, margin: '#', want: "This\nIs\nA\nTest",
+						 #Test`, margin: "#", want: "This\nIs\nA\nTest",
+		},
+		{
+			input: `	This
+						 #	Is
+						 #	A
+						 #	Test`, margin: "#\t", want: "This\nIs\nA\nTest",
+		},
+		{
+			input: ` This
+						 # Is
+						 # A
+						 # Test`, margin: "# ", want: "This\nIs\nA\nTest",
 		},
 	}
 
 	for _, tc := range testCases {
-		got, _ := strings.StripMargin(tc.input, tc.margin)
+		got := strings.StripMargin(tc.input, tc.margin)
 		if tc.want != got {
 			t.Errorf("StripMargin - want: %q but got: %q", tc.want, got)
 		}
