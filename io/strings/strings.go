@@ -1,27 +1,28 @@
 package strings
 
-import gs "strings"
+import (
+	"fmt"
+	gs "strings"
+)
 
-// StripMargin is a utility that replicates the Scala stripMargin function
-func StripMargin(input string, margin rune) (string, error) {
+func stripToRune(input string, margin rune) string {
 	sb := gs.Builder{}
 	nl := '\n'
 
 	strip := false
 
-	input = gs.TrimSpace(gs.Trim(input, "\n"))
+	// in := gs.TrimSpace(input)
 
 	for _, r := range input {
 		if r == margin {
+			sb.WriteRune(r)
 			strip = false
 			continue
 		}
 
 		if r == nl {
 			strip = true
-			if _, err := sb.WriteRune(r); err != nil {
-				return "", err
-			}
+			sb.WriteRune(r)
 			continue
 		}
 
@@ -29,10 +30,26 @@ func StripMargin(input string, margin rune) (string, error) {
 			continue
 		}
 
-		if _, err := sb.WriteRune(r); err != nil {
-			return "", err
-		}
+		sb.WriteRune(r)
 	}
 
-	return sb.String(), nil
+	return sb.String()
+}
+
+func StripMargin(input string, margin string) string {
+	mrs := []rune(margin)
+
+	in := stripToRune(input, mrs[0])
+
+	m := fmt.Sprintf("%c%s", '\n', margin)
+	lines := gs.Split(in, m)
+
+	sb := gs.Builder{}
+
+	for _, l := range lines {
+		sb.WriteString(l)
+		sb.WriteRune('\n')
+	}
+
+	return gs.TrimSpace(gs.Trim(sb.String(), "\n"))
 }
