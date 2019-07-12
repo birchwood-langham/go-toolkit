@@ -36,6 +36,10 @@ func stripToRune(input string, margin rune) string {
 	return sb.String()
 }
 
+/* StripMargin removes any leading spaces and the specified margin from multi-line strings
+ * allowing you to write and aligh multi-line strings nicely in your code similar to the Scala
+ * StripMarging
+ */
 func StripMargin(input string, margin string) string {
 	mrs := []rune(margin)
 
@@ -54,6 +58,7 @@ func StripMargin(input string, margin string) string {
 	return gs.TrimSpace(gs.Trim(sb.String(), "\n"))
 }
 
+// SplitAndTrimSpace splits a string using the provided separators and removes any leading and trailing spaces around the results
 func SplitAndTrimSpace(input string, sep string) (output []string) {
 	values := gs.Split(input, sep)
 
