@@ -53,3 +53,15 @@ func StripMargin(input string, margin string) string {
 
 	return gs.TrimSpace(gs.Trim(sb.String(), "\n"))
 }
+
+func SplitAndTrimSpace(input string, sep string) (output []string) {
+	values := gs.Split(input, sep)
+
+	output = make([]string, len(values))
+
+	for i, v := range values {
+		output[i] = gs.TrimSpace(v)
+	}
+
+	return
+}
