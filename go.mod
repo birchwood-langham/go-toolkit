@@ -1,3 +1,3 @@
-module gitlab.com/bl-go/toolkit.git
+module github.com/birchwood-langham/go-toolkit
 
 go 1.12
