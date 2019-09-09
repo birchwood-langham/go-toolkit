@@ -60,6 +60,10 @@ func StripMargin(input string, margin string) string {
 
 // SplitAndTrimSpace splits a string using the provided separators and removes any leading and trailing spaces around the results
 func SplitAndTrimSpace(input string, sep string) (output []string) {
+	if len(input) == 0 {
+		return output
+	}
+
 	values := gs.Split(input, sep)
 
 	output = make([]string, len(values))
