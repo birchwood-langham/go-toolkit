@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"gitlab.com/bl-go/toolkit.git/io/strings"
+	"github.com/birchwood-langham/go-toolkit/io/strings"
 )
 
 func TestStripMargin(t *testing.T) {
@@ -70,10 +70,18 @@ func TestSplitAndTrimSpace(t *testing.T) {
 		{"Split comma, with spaces", args{"A, B, C, D", ","}, []string{"A", "B", "C", "D"}},
 		{"Split tab, no spaces", args{"A	B	C	D", "\t"}, []string{"A", "B", "C", "D"}},
 		{"Split tab, with spaces", args{"A	 B	 C	 D", "\t"}, []string{"A", "B", "C", "D"}},
+		{"Split empty string using comma", args{"", ","}, []string{}},
+		{"Split empty string using tab", args{"", "\t"}, []string{}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if gotOutput := strings.SplitAndTrimSpace(tt.args.input, tt.args.sep); !reflect.DeepEqual(gotOutput, tt.wantOutput) {
+			gotOutput := strings.SplitAndTrimSpace(tt.args.input, tt.args.sep)
+
+			if len(gotOutput) == 0 && len(tt.wantOutput) == 0 {
+				return
+			}
+
+			if !reflect.DeepEqual(gotOutput, tt.wantOutput) {
 				t.Errorf("SplitAndTrimSpace() = %v, want %v", gotOutput, tt.wantOutput)
 			}
 		})
