@@ -87,3 +87,140 @@ func TestSplitAndTrimSpace(t *testing.T) {
 		})
 	}
 }
+
+func TestToCsv(t *testing.T) {
+	type args struct {
+		sep rune
+		in []string
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{
+			name: "one-item-comma-separated",
+			args: args{
+				sep: ',',
+				in: []string{"Test"},
+			},
+			want: "Test",
+		},
+		{
+			name: "multiple-items-comma-separated",
+			args: args{
+				sep: ',',
+				in: []string{"This", "is", "a", "test"},
+			},
+			want: "This,is,a,test",
+		},
+		{
+			name: "multiple-items-tab-separated",
+			args: args{
+				sep: '\t',
+				in: []string{"This", "is", "a", "test"},
+			},
+			want: "This\tis\ta\ttest",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := strings.ToCsv(tt.args.sep, tt.args.in...); got != tt.want {
+				t.Errorf("ToCsv() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestToQuotedCsv(t *testing.T) {
+	type args struct {
+		sep   rune
+		quote strings.QuoteType
+		in    []string
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{
+			name: "single-item-comma-separated-double-quoted",
+			args: args{
+				sep:   ',',
+				quote: strings.DoubleQuote,
+				in:    []string{"Test"},
+			},
+			want: `"Test"`,
+		},
+		{
+			name: "multiple-items-comma-separated-double-quoted",
+			args: args{
+				sep:   ',',
+				quote: strings.DoubleQuote,
+				in:    []string{"This", "is", "a", "test"},
+			},
+			want: `"This","is","a","test"`,
+		},
+		{
+			name: "single-item-comma-separated-single-quoted",
+			args: args{
+				sep:   ',',
+				quote: strings.SingleQuote,
+				in:    []string{"Test"},
+			},
+			want: `'Test'`,
+		},
+		{
+			name: "multiple-items-comma-separated-single-quoted",
+			args: args{
+				sep:   ',',
+				quote: strings.SingleQuote,
+				in:    []string{"This", "is", "a", "test"},
+			},
+			want: `'This','is','a','test'`,
+		},
+		{
+			name: "single-item-tab-separated-double-quoted",
+			args: args{
+				sep:   '\t',
+				quote: strings.DoubleQuote,
+				in:    []string{"Test"},
+			},
+			want: `"Test"`,
+		},
+		{
+			name: "multiple-items-tab-separated-double-quoted",
+			args: args{
+				sep:   '\t',
+				quote: strings.DoubleQuote,
+				in:    []string{"This", "is", "a", "test"},
+			},
+			want: "\"This\"\t\"is\"\t\"a\"\t\"test\"",
+		},
+		{
+			name: "single-item-tab-separated-single-quoted",
+			args: args{
+				sep:   '\t',
+				quote: strings.SingleQuote,
+				in:    []string{"Test"},
+			},
+			want: `'Test'`,
+		},
+		{
+			name: "multiple-items-tab-separated-single-quoted",
+			args: args{
+				sep:   '\t',
+				quote: strings.SingleQuote,
+				in:    []string{"This", "is", "a", "test"},
+			},
+			want: "'This'\t'is'\t'a'\t'test'",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := strings.ToQuotedCsv(tt.args.sep, tt.args.quote, tt.args.in...); got != tt.want {
+				t.Errorf("ToQuotedCsv() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

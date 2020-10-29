@@ -74,3 +74,38 @@ func SplitAndTrimSpace(input string, sep string) (output []string) {
 
 	return
 }
+
+func ToCsv(sep rune, in ...string) string {
+	b := gs.Builder{}
+
+	for i, s := range in {
+		if i > 0 {
+			b.WriteRune(sep)
+		}
+
+		b.WriteString(s)
+	}
+
+	return b.String()
+}
+
+type QuoteType rune
+
+const SingleQuote QuoteType = '\''
+const DoubleQuote QuoteType = '"'
+
+func ToQuotedCsv(sep rune, quote QuoteType, in ...string) string {
+	b := gs.Builder{}
+
+	for i, s := range in {
+		if i > 0 {
+			b.WriteRune(sep)
+		}
+
+		b.WriteRune(rune(quote))
+		b.WriteString(s)
+		b.WriteRune(rune(quote))
+	}
+
+	return b.String()
+}
